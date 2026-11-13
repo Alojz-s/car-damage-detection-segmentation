@@ -1,5 +1,7 @@
 # Car damage detection & segmentation
 
+[![CI](https://github.com/Alojz-s/car-damage-detection-segmentation/actions/workflows/ci.yml/badge.svg)](https://github.com/Alojz-s/car-damage-detection-segmentation/actions/workflows/ci.yml)
+
 Engineering thesis: detection and instance segmentation of car body damage on the
 [CarDD](https://cardd-ustc.github.io/) dataset with YOLO-seg, plus a Damage Severity Index (DSI).
 
@@ -23,7 +25,12 @@ Expected: `True` and your GPU name. The NVIDIA driver must support CUDA 12.8 or 
 (check with `nvidia-smi`). Verified with torch 2.11.0+cu128, Ultralytics 8.4.212 on an
 RTX 3050 6 GB Laptop GPU.
 
-Run the checks with `ruff check .` and `pytest`.
+Run the checks with `ruff check .`, `ruff format --check .` and `pytest` (the same steps as CI).
+Optionally enable the pre-commit hook (ruff lint and format on every commit):
+
+```powershell
+pre-commit install
+```
 
 ## Data
 
