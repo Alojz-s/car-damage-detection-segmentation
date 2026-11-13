@@ -1,0 +1,6 @@
+{
+  "title": "Detekcja uszkodzeń karoserii",
+  "upload": "Wgraj zdjęcie pojazdu",
+  "result": "Wynik segmentacji",
+  "dsi": "Wskaźnik dotkliwości uszkodzeń (DSI)"
+}

@@ -218,3 +218,34 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Project specific ---
+# Dataset (CarDD licence forbids redistribution) and generated data
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+# Training outputs and model weights
+runs/*
+!runs/.gitkeep
+*.pt
+*.onnx
+*.engine
+# Experiment trackers
+wandb/
+lightning_logs/
+.ruff_cache/
+.mypy_cache/
+
+# --- AI assistants / agents ---
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.cursor/
+.cursorrules
+.aider*
+.windsurf/
+.continue/
+.github/copilot-instructions.md
+AGENTS.md

@@ -1,0 +1,12 @@
+# Training config for a 6 GB GPU (RTX 3050). Passed to ultralytics `model.train(**cfg)`.
+model: yolo11s-seg.pt
+data: configs/data.yaml
+imgsz: 640
+epochs: 100
+batch: 8
+workers: 4
+amp: true
+seed: 42
+deterministic: true
+project: runs
+name: yolo11s_seg_baseline

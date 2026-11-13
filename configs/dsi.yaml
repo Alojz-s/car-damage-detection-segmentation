@@ -1,0 +1,7 @@
+# Damage Severity Index parameters. Values are placeholders, to be justified and tuned.
+class_weights:
+  dent: 1.0
+  scratch: 0.5
+  crack: 1.5
+  glass_shatter: 2.0
+  lamp_broken: 1.5

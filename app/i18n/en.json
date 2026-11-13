@@ -1,0 +1,6 @@
+{
+  "title": "Car body damage detection",
+  "upload": "Upload a vehicle photo",
+  "result": "Segmentation result",
+  "dsi": "Damage Severity Index (DSI)"
+}

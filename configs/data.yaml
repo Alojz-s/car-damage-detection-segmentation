@@ -1,0 +1,11 @@
+# Generated YOLO-seg dataset (see `python -m cardd.data.convert`)
+path: data/processed/cardd_yolo
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: dent
+  1: scratch
+  2: crack
+  3: glass_shatter
+  4: lamp_broken
