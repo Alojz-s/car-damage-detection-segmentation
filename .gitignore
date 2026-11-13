@@ -252,3 +252,4 @@ AGENTS.md
 
 # One-off local scripts
 scripts/create_issues.*
+scripts/edit_issues.*
