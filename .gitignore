@@ -253,3 +253,29 @@ AGENTS.md
 # One-off local scripts
 scripts/create_issues.*
 scripts/edit_issues.*
+
+# Generated overlay QA images
+docs/figures/overlays/
+
+# Experiment tracking / training artifacts
+mlruns/
+tensorboard/
+events.out.tfevents.*
+*.pth
+*.ckpt
+*.safetensors
+*.weights
+*.torchscript
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Tool caches
+.benchmarks/
+
+# Generated figures
+docs/figures/*.png
