@@ -1,0 +1,13 @@
+# Same as train_yolo11n_seg.yaml, for a dataset that also contains undamaged-car negatives.
+# Run `python -m cardd.data.add_negatives` before training. Passed to `model.train(**cfg)`.
+model: yolo11n-seg.pt
+data: configs/data.yaml
+imgsz: 640
+epochs: 50
+batch: 16 # yolo11n-seg at 640 fits in 6 GB with AMP; lower to 8 on an out-of-memory error
+workers: 4 # dataloader processes; more brings little on a laptop CPU and costs RAM on Windows
+amp: true
+seed: 42
+deterministic: true
+project: runs
+name: yolo11n_seg_negatives
