@@ -34,9 +34,10 @@ pre-commit install
 
 ## Data
 
-Unpack the original CarDD download so that it lives in `data/raw/CarDD_release/`
-(`CarDD_COCO/` is used, `CarDD_SOD/` is ignored). It is not committed, the licence forbids
-redistribution. Then convert it to YOLO-seg format:
+Unpack the original CarDD download and keep only the COCO part (`CarDD_COCO/`) as
+`data/raw/CarDD/` (it contains `train2017/`, `val2017/`, `test2017/` and `annotations/`).
+The SOD part is not used. The data is not committed, the licence forbids redistribution.
+Then convert it to YOLO-seg format:
 
 ```bash
 python -m cardd.data.convert
