@@ -43,6 +43,10 @@ Then convert it to YOLO-seg format:
 python -m cardd.data.convert
 ```
 
+Output goes to `data/processed/cardd_yolo/` (original file names kept). Options: `--raw`, `--out`,
+`--force` (replace a previous output), `--drop-empty` (drop images without labels),
+`--multipart merge|split` (default `merge`), `--link copy|hardlink`.
+
 ## Layout
 
 - `src/cardd/` - package (data, training, dsi, inference, viz)
