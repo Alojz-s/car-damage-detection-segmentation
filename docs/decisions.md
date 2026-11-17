@@ -12,3 +12,11 @@
   number of CarDD instances. `--multipart split` writes one line per part; its metrics are not
   directly comparable with the CarDD paper because one instance becomes several GT objects.
 - Converted files keep their original CarDD file names; `<split>_images.csv` maps them to image ids.
+- Negatives: the baseline model (trained on CarDD only) flagged reflections on glass and paint and
+  intact lamps as damage (`glass_shatter` 0.90-0.95 on an intact windscreen). Undamaged-car photos
+  are added to training as background images (empty label files): the `F_Normal`/`R_Normal`
+  classes of the Hugging Face dataset `DrBimmer/comprehensive-car-damage` (MIT licence; the image
+  source is not stated, 800 images, version `355b0990`). Slightly damaged images found in a manual
+  review and duplicates are listed in `configs/negatives_exclude.txt`. 100 other images are held
+  out for measuring the false positive rate and are never used for training. Compare
+  `yolo11n_seg_baseline` and `yolo11n_seg_negatives` (same settings, same seed).

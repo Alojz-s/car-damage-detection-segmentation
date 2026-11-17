@@ -279,3 +279,7 @@ desktop.ini
 
 # Generated figures
 docs/figures/*.png
+
+# Colab (temporary): packed dataset for upload and the training notebook
+*.tar
+notebooks/colab_train.ipynb

@@ -1,0 +1,31 @@
+# Images of data/raw/comprehensive_car_damage_normal/ to skip when adding negative images.
+# They are labelled "undamaged" in the source dataset but show slight damage (flagged by hand).
+# One path per line, relative to the dataset folder.
+F_Normal/FN_13.jpg
+F_Normal/FN_14.jpg
+F_Normal/FN_55.jpg
+F_Normal/FN_56.jpg
+F_Normal/FN_90.jpg
+F_Normal/FN_93.jpg
+F_Normal/FN_97.jpg
+F_Normal/FN_101.jpg
+# Exact or near duplicates of other images (the second one of each pair is skipped).
+F_Normal/FN_345.jpg
+F_Normal/FN_346.jpg
+F_Normal/FN_347.jpg
+F_Normal/FN_348.jpg
+R_Normal/RN_7.jpg
+R_Normal/RN_8.jpg
+R_Normal/RN_9.jpg
+R_Normal/RN_10.jpg
+R_Normal/RN_11.jpg
+R_Normal/RN_12.jpg
+R_Normal/RN_94.jpg
+R_Normal/RN_136.jpg
+# Slight damage found in the manual review of model-flagged images.
+F_Normal/FN_108.jpg
+F_Normal/FN_91.jpg
+F_Normal/FN_18.jpg
+R_Normal/RN_198.jpg
+R_Normal/RN_164.jpg
+R_Normal/RN_175.jpg
