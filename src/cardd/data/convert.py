@@ -390,7 +390,6 @@ def convert(
 
 
 def main(argv: list[str] | None = None) -> None:
-    """CLI entrypoint."""
     parser = argparse.ArgumentParser(description="Convert CarDD COCO to YOLO-seg.")
     parser.add_argument("--raw", type=Path, default=DEFAULT_RAW_DIR, help="CarDD COCO directory")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT_DIR, help="output directory")

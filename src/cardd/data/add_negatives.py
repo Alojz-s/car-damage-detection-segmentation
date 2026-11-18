@@ -178,7 +178,6 @@ def add_negatives(
 
 
 def main(argv: list[str] | None = None) -> None:
-    """CLI entrypoint."""
     parser = argparse.ArgumentParser(description="Add undamaged-car negatives to the dataset.")
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE, help="negatives folder")
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET, help="YOLO-seg dataset")
