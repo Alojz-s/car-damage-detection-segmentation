@@ -184,7 +184,6 @@ def evaluate(
 
 
 def main(argv: Sequence[str] | None = None) -> None:
-    """Command-line interface."""
     parser = argparse.ArgumentParser(description="Evaluate a trained YOLO-seg model.")
     parser.add_argument("--weights", type=Path, required=True, help="path to best.pt")
     parser.add_argument("--split", choices=SPLITS, default="test", help="split to evaluate")

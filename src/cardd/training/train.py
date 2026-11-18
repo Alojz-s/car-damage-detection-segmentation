@@ -36,7 +36,6 @@ RESOLVED_CONFIG_FILE = "resolved_config.yaml"
 RESOLVED_DATA_FILE = "data_resolved.yaml"
 SUMMARY_FILE = "run_summary.json"
 
-# Ultralytics seg fitness: 0.1 * mAP50 + 0.9 * mAP50-95, summed over box and mask.
 _BOX_MAP50 = "metrics/mAP50(B)"
 _BOX_MAP5095 = "metrics/mAP50-95(B)"
 _MASK_MAP50 = "metrics/mAP50(M)"
@@ -153,6 +152,7 @@ def summarize_results(results_csv: Path) -> dict[str, Any]:
         return _to_float(row.get(key))
 
     def fitness(row: dict[str, str]) -> float:
+        # Ultralytics seg fitness: 0.1 * mAP50 + 0.9 * mAP50-95, summed over box and mask.
         total = 0.0
         for k50, k5095 in ((_BOX_MAP50, _BOX_MAP5095), (_MASK_MAP50, _MASK_MAP5095)):
             total += 0.1 * (metric(row, k50) or 0.0) + 0.9 * (metric(row, k5095) or 0.0)
@@ -272,7 +272,6 @@ def train(config_path: Path, overrides: Sequence[str] = (), *, resume: bool = Fa
 
 
 def main(argv: Sequence[str] | None = None) -> None:
-    """Command-line interface."""
     parser = argparse.ArgumentParser(description="Train a YOLO-seg model from a YAML config.")
     parser.add_argument("--config", type=Path, required=True, help="training YAML config")
     parser.add_argument(
