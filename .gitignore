@@ -237,19 +237,6 @@ lightning_logs/
 .ruff_cache/
 .mypy_cache/
 
-# --- AI assistants / agents ---
-.claude/
-CLAUDE.md
-CLAUDE.local.md
-.mcp.json
-.cursor/
-.cursorrules
-.aider*
-.windsurf/
-.continue/
-.github/copilot-instructions.md
-AGENTS.md
-
 # One-off local scripts
 scripts/create_issues.*
 scripts/edit_issues.*
