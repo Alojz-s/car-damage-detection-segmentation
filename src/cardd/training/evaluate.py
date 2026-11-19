@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 SPLITS = ("val", "test")
 DEFAULT_DATA = "configs/data.yaml"
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
+PREDICT_CHUNK = 8  # images per predict call, keeps VRAM low at a large imgsz
 
 
 def _plain(value: Any) -> Any:
@@ -55,7 +56,11 @@ def per_class_rows(metrics: Any) -> list[dict[str, Any]]:
 
 
 def count_false_positives(
-    model: Any, images: Sequence[Path], confs: Sequence[float], imgsz: int = 640
+    model: Any,
+    images: Sequence[Path],
+    confs: Sequence[float],
+    imgsz: int = 640,
+    max_det: int = 300,
 ) -> dict[str, dict[str, Any]]:
     """Count detections on images that contain no damage (every detection is a false positive).
 
@@ -65,12 +70,13 @@ def count_false_positives(
     """
     low = min(confs)
     found: list[list[tuple[str, float]]] = []
-    for result in model.predict(
-        [str(p) for p in images], conf=low, imgsz=imgsz, stream=True, verbose=False
-    ):
-        classes = [model.names[int(c)] for c in result.boxes.cls]
-        scores = [float(s) for s in result.boxes.conf]
-        found.append(list(zip(classes, scores, strict=True)))
+    # Ultralytics runs a whole list of paths as one batch, so predict in small chunks.
+    for start in range(0, len(images), PREDICT_CHUNK):
+        chunk = [str(p) for p in images[start : start + PREDICT_CHUNK]]
+        for result in model.predict(chunk, conf=low, imgsz=imgsz, max_det=max_det, verbose=False):
+            classes = [model.names[int(c)] for c in result.boxes.cls]
+            scores = [float(s) for s in result.boxes.conf]
+            found.append(list(zip(classes, scores, strict=True)))
 
     summary: dict[str, dict[str, Any]] = {}
     for conf in confs:
@@ -88,6 +94,17 @@ def count_false_positives(
 def list_images(folder: Path) -> list[Path]:
     """Sorted image files directly inside ``folder``."""
     return sorted(p for p in folder.iterdir() if p.suffix.lower() in IMAGE_SUFFIXES)
+
+
+def _free_gpu_memory() -> None:
+    """Release cached GPU memory left over from the validation run (no-op without CUDA)."""
+    import gc
+
+    import torch
+
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 
 def _write_per_class_csv(path: Path, rows: Iterable[dict[str, Any]]) -> None:
@@ -110,13 +127,16 @@ def evaluate(
     conf: float = 0.001,
     iou: float = 0.7,
     workers: int = 4,
+    max_det: int = 300,
     name: str | None = None,
     heldout: Path | None = None,
     fp_conf: Sequence[float] = (0.25, 0.5),
 ) -> Path:
     """Evaluate ``weights`` on ``split`` and return the output directory.
 
-    ``conf=0.001`` and ``iou=0.7`` are the Ultralytics validation defaults used for mAP.
+    ``conf=0.001``, ``iou=0.7`` and ``max_det=300`` are the Ultralytics validation defaults used
+    for mAP. Lower ``max_det`` (for example 100) when the GPU runs out of memory at a large
+    ``imgsz``; CarDD images have only a few instances, so this hardly changes the result.
     With ``heldout`` (a folder of undamaged-car images) the false positive counts at the
     thresholds ``fp_conf`` are added.
 
@@ -148,6 +168,7 @@ def evaluate(
         conf=conf,
         iou=iou,
         workers=workers,
+        max_det=max_det,
         project=str(project),
         name=run_name,
         exist_ok=True,
@@ -165,13 +186,18 @@ def evaluate(
         "imgsz": imgsz,
         "conf": conf,
         "iou": iou,
+        "max_det": max_det,
         "overall": overall_metrics(metrics),
         "per_class": rows,
         "speed_ms_per_image": {k: round(float(v), 2) for k, v in metrics.speed.items()},
     }
     if heldout_images:
+        # Drop everything the validation run holds on the GPU and predict with a fresh model:
+        # at a large imgsz the leftovers otherwise cause out-of-memory errors on 6 GB cards.
+        del metrics, model
+        _free_gpu_memory()
         report["false_positives_on_intact_cars"] = count_false_positives(
-            model, heldout_images, fp_conf, imgsz
+            YOLO(str(weights_path)), heldout_images, fp_conf, imgsz, max_det
         )
 
     (out_dir / "evaluation.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -193,6 +219,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--imgsz", type=int, default=640)
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument(
+        "--max-det", type=int, default=300, help="max detections per image (lower to save VRAM)"
+    )
     parser.add_argument("--name", default=None, help="output folder name under runs/eval")
     parser.add_argument(
         "--heldout",
@@ -217,6 +246,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         imgsz=args.imgsz,
         batch=args.batch,
         workers=args.workers,
+        max_det=args.max_det,
         name=args.name,
         heldout=args.heldout,
         fp_conf=args.fp_conf,
